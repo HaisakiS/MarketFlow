@@ -1,6 +1,6 @@
 from database import get_marketflow_products
 from analytics import plot_product_trend
-from scraper import get_facebook_title, find_product_match
+from scraper import get_scraped_title, find_product_match
 
 def print_menu():
     print("\n======================================")
@@ -18,12 +18,12 @@ def handle_capture_price():
     print("           CAPTURE NEW PRICE           ")
     print("=" * 38)
     
-    url = input("Enter the product URL (Facebook, Temu, etc.): ").strip()
+    url = input("Enter the product URL (Facebook, Aliexpress, Amazon, Ebay.): \n").strip()
     if not url:
         print("⚠️ URL cannot be empty.")
         return
         
-    extracted_title = get_facebook_title(url)
+    extracted_title, source = get_scraped_title(url)
     db_products = get_marketflow_products()
     
     #Searching for matches in the database
