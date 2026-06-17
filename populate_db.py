@@ -32,9 +32,10 @@ def populate_real_data():
         #Inserting Data
         print("Inserting price sources...")
         source_list = [
-            ('Temu', 'Supplier'),       # ID 1
+            ('Aliexpress', 'Supplier'),       # ID 1
             ('Ebay', 'Supplier'),       # ID 2
-            ('Facebook', 'Competition') # ID 3
+            ('Facebook', 'Competition'), # ID 3
+            ('Amazon', 'Supplier') # ID 4
         ]
         cursor.executemany("""INSERT INTO price_sources (source_name, type) 
                               VALUES (?, ?);""", source_list)
@@ -74,7 +75,7 @@ def populate_real_data():
                               VALUES (?, ?, ?, ?, ?);""", price_list)
 
         conn.commit()
-        print("\nSuccess! {len(history_data)} historical records have been added to the database.")
+        print(f"\nSuccess! {len(price_list)} historical records have been added to the database.")
         
     except sqlite3.Error as e:
             print(f"Database error: {e}")
