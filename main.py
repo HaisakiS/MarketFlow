@@ -9,8 +9,10 @@ from menu import (
 
 def main():
 
-    #Create Tables and popualte them (wipe before populate in case already had data)
-    populate_real_data()
+    
+    #Comment this line if you don't want to use .csv or reset database
+    populate_real_data() #Create Tables and popualte them 
+                          #(wipe before populate in case already had data)
     
     while True:
         print_menu()

@@ -20,12 +20,11 @@ def populate_real_data():
     try:
         cursor = conn.cursor()
         
-        #Deleting old data to avoid duplicates
-        print("Wiping old data...")
+        #Database Reset block
+        #COMMENT THIS BLOCK IF YOU WANT TO STOP RESETING THE DATABASE EACH RUN
+        print("Wiping old data...") #Deleting old data to avoid duplicates
         cursor.execute("DELETE FROM price_history;")
         cursor.execute("DELETE FROM price_sources;")
-        
-        #Reseting the sqlite sequence to 0
         cursor.execute("DELETE FROM sqlite_sequence WHERE name='price_history';")
         cursor.execute("DELETE FROM sqlite_sequence WHERE name='price_sources';")
         
