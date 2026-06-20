@@ -4,7 +4,7 @@ A modular price tracking and market analysis system built with Python and SQLite
 
 ## 🚀 Key Features
 
-* **Optimized Web Scraping:** Uses `requests` and `BeautifulSoup4` to quickly extract the item title from URLs, bypassing anti-bot blocks without needing to download the entire website.
+* **Optimized Web Scraping:** Uses `playwright` to quickly extract the item title from URLs, bypassing anti-bot blocks without needing to download the entire website.
 * **Smart Product Matching (Fuzzy Matching):** Implements the `thefuzz` library to map noisy and messy web titles directly to clean catalog names in the database, ignoring extra words or their order.
 * **Visual Trend Analysis:** Transforms raw SQLite data into interactive line charts using `pandas` and `matplotlib`. Allows visualizing and comparing historical price evolution, filtering by suppliers, competitors, and product variants.
 
@@ -12,7 +12,7 @@ A modular price tracking and market analysis system built with Python and SQLite
 
 * **Language:** Python 3.x
 * **Database Engine:** SQLite 3 (Relational structure)
-* **Web Scraping:** `requests`, `beautifulsoup4`
+* **Web Scraping:** `playwright`
 * **Natural Language Processing / Matching:** `thefuzz` (Levenshtein Distance)
 * **Data Science & Visualization:** `pandas`, `matplotlib`
 
@@ -31,6 +31,7 @@ The database architecture is optimized to record history as a ledger, maintainin
 * `scraper.py` - URL cleaning engine, HTML extraction, and Fuzzy Match algorithm.
 * `analytics.py` - DataFrames processor (Pandas) and chart generator (Matplotlib).
 * `populate_db.py` - Script for mass data loading (Bulk Insert) from `.csv` files to simulate histories.
+* `product_list.csv` - CSV file with the example data to insert.
 * `marketflow.sql` - Schema file containing table declarations and relational integrity.
 
 ## ⚙️ Installation & Usage
@@ -38,7 +39,7 @@ The database architecture is optimized to record history as a ledger, maintainin
 ### 1. Requirements & Dependencies
 Ensure you have Python 3.x installed. Then, install the required libraries by running the following command in your terminal:
 ```bash
-pip install requests beautifulsoup4 thefuzz[speedup] pandas matplotlib
+pip install pandas matplotlib playwright thefuzz
 ```
 
 ### 2. Automatic Initialization
