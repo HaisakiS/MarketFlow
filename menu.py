@@ -1,6 +1,6 @@
-from database import get_marketflow_products
+from database import get_marketflow_products, save_price_record
 from analytics import plot_product_trend
-from scraper import get_scraped_title, find_product_match
+from scraper import get_scraped_data, find_product_match
 
 def print_menu():
     print("\n======================================")
@@ -11,6 +11,7 @@ def print_menu():
     print("3. 📋 View Product Catalog")
     print("4. ❌ Exit")
     print("======================================")
+
 
 def handle_capture_price():
     #Allows scraping and register new price
@@ -23,13 +24,31 @@ def handle_capture_price():
         print("⚠️ URL cannot be empty.")
         return
         
-    extracted_title, source = get_scraped_title(url)
+    extracted_title, source, extracted_price = get_scraped_data(url)
+    
     db_products = get_marketflow_products()
     
     #Searching for matches in the database
-    matches = find_product_match(extracted_title, db_products)
     
-    """TO DO: Code to record the price, give choices..."""
+    matches = find_product_match(extracted_title, db_products, extracted_price)
+    
+    print("\nChoose the correct product (1-3) or 0 to add as a new product")
+    choice = input(f"\nYour selection (0-{len(matches)}): ").strip()
+    
+    product_name = ""
+    if choice == '0':
+        product_name = input("Enter new product name: ")
+    elif choice.isdigit() and 1 <= int(choice) <= len(matches):
+        product_name = matches[int(choice) - 1][0]
+    
+    if product_name:
+        save_price_record(product_name, extracted_price, source)
+    else:
+        print("❌ Operation cancelled.")
+    
+    
+    """TO DO: Choose from existing carriants of the product or add a new one"""
+
 
 def handle_view_analytics():
     #Show the graph of a product's price history
@@ -61,6 +80,7 @@ def handle_view_analytics():
             print("Error: Number out of range.")
     except ValueError:
         print("Error: Please enter a valid number.")
+
 
 def handle_view_catalog():
     #List the registered products
