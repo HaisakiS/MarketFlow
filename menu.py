@@ -32,7 +32,7 @@ def handle_capture_price():
     
     matches = find_product_match(extracted_title, db_products, extracted_price)
     
-    print("\nChoose the correct product (1-3) or 0 to add as a new product")
+    print(f"\nChoose the correct product (1-{len(matches)}) or (0) to add as a new product")
     choice = input(f"\nYour selection (0-{len(matches)}): ").strip()
     
     product_name = ""
@@ -45,9 +45,6 @@ def handle_capture_price():
         save_price_record(product_name, extracted_price, source)
     else:
         print("❌ Operation cancelled.")
-    
-    
-    """TO DO: Choose from existing carriants of the product or add a new one"""
 
 
 def handle_view_analytics():
