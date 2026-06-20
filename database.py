@@ -1,5 +1,6 @@
 import sqlite3
 import os
+from datetime import datetime
 
 DB_NAME = "marketflow.db"
 SCHEMA_FILE = "marketflow.sql"
@@ -13,6 +14,7 @@ def connect_db():
     except sqlite3.Error as e:
         print(f"Error connecting to database: {e}")
         return conn
+
 
 def initialize_sys():
     conn = connect_db()
@@ -37,6 +39,7 @@ def initialize_sys():
         if conn:
             conn.close()
 
+
 def get_marketflow_products():
     conn = connect_db()
     if conn is None:
@@ -56,3 +59,30 @@ def get_marketflow_products():
     finally:
         if conn:
             conn.close()
+            
+            
+def save_price_record(product_name, price, source):
+    #Saves the captured price in the price_history table
+    conn = connect_db()
+    if conn is None:
+        print("❌ Error: Could not connect to the database.")
+        return
+    
+    try:
+        cursor = conn.cursor()
+        #Getting id_source
+        cursor.execute('SELECT id_source FROM price_sources WHERE source_name = ?', (source,))
+        id_source = cursor.fetchone()[0]
+        #Inserting into the TABLE
+        query = '''
+            INSERT INTO price_history (product_name, recorded_price, id_source, record_date)
+            VALUES (?, ?, ?, ?)
+        '''
+        cursor.execute(query, (product_name, price, id_source, datetime.now().strftime("%d/%m/%Y")))
+        conn.commit()
+        print(f"✅ Price S/{price} saved for '{product_name}' (Source: {source})")
+    except sqlite3.Error as e:
+        print(f"❌ Error saving to database: {e}")
+    finally:
+        conn.close()
+        
