@@ -73,14 +73,41 @@ def save_price_record(product_name, price, source):
         #Getting id_source
         cursor.execute('SELECT id_source FROM price_sources WHERE source_name = ?', (source,))
         id_source = cursor.fetchone()[0]
+        #Getting variants
+        cursor.execute("SELECT DISTINCT variant FROM price_history WHERE product_name = ?", (product_name,))
+        available_variants = cursor.fetchall()
+        
+        if available_variants:
+            print(f"\nFound variants for '{product_name}':")
+            print("-" * 65)
+            for index, var in enumerate(available_variants):
+                variant_name = var[0]
+                print(f"{index + 1}. {variant_name:<20}")
+            print("0. ➕ Add as a new product\n")
+            print("-" * 65)
+            choice = input(f"\nChoose variant option to save as (1-{len(available_variants)}) or (0) to add new: ")
+            
+            if choice.isdigit() and 1 <= int(choice) <= len(available_variants):
+                choosen_variant = available_variants[int(choice) - 1][0]
+            elif choice == '0':
+                choosen_variant = input("Write variant for the product: ")
+            else:
+                print("Invalid option")
+                return
+        else:
+            print(f"Registering new product '{product_name}'.")
+            choosen_variant = input("Write variant or left blank for 'Unique': ")
+            if choosen_variant == '': choosen_variant = 'Unique'
+            
+            
         #Inserting into the TABLE
         query = '''
-            INSERT INTO price_history (product_name, recorded_price, id_source, record_date)
-            VALUES (?, ?, ?, ?)
+            INSERT INTO price_history (product_name, variant, recorded_price, id_source, record_date)
+            VALUES (?, ?, ?, ?, ?)
         '''
-        cursor.execute(query, (product_name, price, id_source, datetime.now().strftime("%d/%m/%Y")))
+        cursor.execute(query, (product_name, choosen_variant, price, id_source, datetime.now().strftime("%d/%m/%Y")))
         conn.commit()
-        print(f"✅ Price S/{price} saved for '{product_name}' (Source: {source})")
+        print(f"\n✅ Price S/{price} saved for '{product_name} | {choosen_variant}' (Source: {source})")
     except sqlite3.Error as e:
         print(f"❌ Error saving to database: {e}")
     finally:
